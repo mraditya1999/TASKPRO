@@ -1,13 +1,16 @@
 import { Outlet } from 'react-router-dom';
-import { Footer, Header } from '../components';
+import { Footer, Header, ProtectedRoute } from '../components';
 
 const LayoutPage = () => {
   return (
-    <div>
-      <Header />
-      <Outlet />
-      <Footer />
-    </div>
+    <ProtectedRoute>
+      <>
+        <Header />
+        <Outlet />
+        <Footer />
+      </>
+    </ProtectedRoute>
   );
 };
+
 export default LayoutPage;
