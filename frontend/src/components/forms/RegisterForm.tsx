@@ -9,36 +9,31 @@ const RegisterForm = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    const name = data.get('name');
+    const email = data.get('email');
+    const password = data.get('password');
+
+    if (!name || !email || !password)
+      return console.log('All field are required');
+
+    console.log(name, email, password);
   };
 
   return (
     <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
       <Grid container spacing={2}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            autoComplete='given-name'
-            name='firstName'
-            required
-            fullWidth
-            id='firstName'
-            label='First Name'
-            autoFocus
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
+        <Grid item xs={12}>
           <TextField
             required
             fullWidth
-            id='lastName'
-            label='Last Name'
-            name='lastName'
-            autoComplete='family-name'
+            id='name'
+            label='Name'
+            name='name'
+            autoComplete='name'
           />
         </Grid>
+
         <Grid item xs={12}>
           <TextField
             required
