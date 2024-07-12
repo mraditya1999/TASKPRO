@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 type User = {
   id: string;
@@ -10,6 +11,7 @@ type User = {
 
 type UserResponse = {
   data: User | null;
+  status?: string;
 };
 
 const getUserFromLocalStorage = (): UserResponse | null => {
@@ -25,7 +27,7 @@ const initialState: UserResponse =
 
 const userSlice = createSlice({
   name: 'user',
-  initialState: initialState,
+  initialState,
   reducers: {
     loginUser: (state, action: PayloadAction<UserResponse>) => {
       const response = action.payload;

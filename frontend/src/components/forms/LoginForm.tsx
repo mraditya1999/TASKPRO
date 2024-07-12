@@ -19,6 +19,7 @@ const LoginForm = () => {
     const data = new FormData(event.currentTarget);
     const email = data.get('email');
     const password = data.get('password');
+    const rememberMe = data.get('rememberMe') === 'remember';
 
     if (!email || !password) {
       console.log('All fields are required');
@@ -29,8 +30,10 @@ const LoginForm = () => {
         email,
         password,
       });
-      dispatch(loginUser(response.data.data));
+      dispatch(loginUser(response.data));
+      localStorage.setItem('rememberMe', JSON.stringify(rememberMe));
       navigate('/');
+      0;
     } catch (error) {
       console.log(error);
     }
@@ -45,8 +48,9 @@ const LoginForm = () => {
         id='email'
         label='Email Address'
         name='email'
-        autoComplete='email'
+        // autoComplete='email'
         autoFocus
+        value='aditya@gmail.com'
       />
       <TextField
         margin='normal'
@@ -56,10 +60,13 @@ const LoginForm = () => {
         label='Password'
         type='password'
         id='password'
-        autoComplete='current-password'
+        value='12345'
+        // autoComplete='current-password'
       />
       <FormControlLabel
-        control={<Checkbox value='remember' color='primary' />}
+        control={
+          <Checkbox value='remember' color='primary' name='rememberMe' />
+        }
         label='Remember me'
       />
       <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>

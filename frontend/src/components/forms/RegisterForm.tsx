@@ -1,12 +1,14 @@
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { Link } from '@mui/material';
 import { customFetch } from '../../utils/customFetch';
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -19,12 +21,12 @@ const RegisterForm = () => {
       return console.log('All field are required');
 
     try {
-      const user = await customFetch.post('/user/register', {
+      await customFetch.post('/user/register', {
         name,
         email,
         password,
       });
-      console.log(user);
+      navigate('/login');
     } catch (error) {
       console.log(error);
     }
