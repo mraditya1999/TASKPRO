@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import { NavLink } from 'react-router-dom';
 import Button from '@mui/material/Button';
+import { Link } from '@mui/material';
 
 const RegisterForm = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -65,7 +66,9 @@ const RegisterForm = () => {
       </Button>
       <Grid container justifyContent='flex-end'>
         <Grid item>
-          <NavLink to='/login'>Already have an account? Login</NavLink>
+          <Link component={NavLink} to='/login' variant='body1'>
+            Already have an account? Login
+          </Link>
         </Grid>
       </Grid>
     </Box>

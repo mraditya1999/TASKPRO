@@ -5,6 +5,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { NavLink } from 'react-router-dom';
+import { Link } from '@mui/material';
 
 const LoginForm = () => {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -47,10 +48,14 @@ const LoginForm = () => {
       </Button>
       <Grid container>
         <Grid item xs>
-          <NavLink to='/forget-password'>Forgot password?</NavLink>
+          <Link component={NavLink} to='/forget-password' variant='body1'>
+            Forgot password?
+          </Link>
         </Grid>
         <Grid item>
-          <NavLink to='/register'>{"Don't have an account? Register"}</NavLink>
+          <Link component={NavLink} to='/register'>
+            {"Don't have an account? Register"}
+          </Link>
         </Grid>
       </Grid>
     </Box>
