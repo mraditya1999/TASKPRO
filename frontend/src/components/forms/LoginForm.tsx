@@ -4,17 +4,36 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { Link } from '@mui/material';
+import { customFetch } from '../../utils/customFetch';
+import { useAppDispatch } from '../../app/hooks';
+import { loginUser } from '../../app/features/user/userSlice';
 
 const LoginForm = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const email = data.get('email');
+    const password = data.get('password');
+
+    if (!email || !password) {
+      console.log('All fields are required');
+    }
+
+    try {
+      const response = await customFetch.post('/user/login', {
+        email,
+        password,
+      });
+      dispatch(loginUser(response.data.data));
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
