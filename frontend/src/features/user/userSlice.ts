@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getUserFromLocalStorage, IUserResponse } from '../../utils';
+import toast from 'react-hot-toast';
 
 const initialState: IUserResponse = getUserFromLocalStorage() || { data: null };
 
@@ -13,14 +14,15 @@ const userSlice = createSlice({
     ) => {
       const { data, rememberMe } = action.payload;
       state.data = data;
-
       const storage = rememberMe ? localStorage : sessionStorage;
       storage.setItem('user', JSON.stringify(data));
+      toast.success('Logged In Successfully');
     },
     logoutUser: (state) => {
       state.data = null;
       localStorage.removeItem('user');
       localStorage.removeItem('rememberMe');
+      toast.success('Logged Out Successfully');
     },
   },
 });

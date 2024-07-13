@@ -8,6 +8,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { Link } from '@mui/material';
+import toast from 'react-hot-toast';
 
 const initialValues = {
   name: '',
@@ -27,16 +28,20 @@ const RegisterForm = () => {
     e.preventDefault();
     const { name, email, password } = formValues;
     if (!name || !email || !password) {
-      console.log('All field are required');
+      toast.error('All field are required');
       return;
     }
 
     try {
       await customFetch.post('/user/register', formValues);
+      toast.success('Registered successfully');
       navigate(ROUTES.LOGIN);
     } catch (error) {
-      console.error('Registration failed:', error);
-      alert('Registration failed. Please try again.');
+      const errorMessage =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error as any).response?.data?.error ||
+        'Registration failed. Please try again.';
+      toast.error(errorMessage);
     }
   };
 

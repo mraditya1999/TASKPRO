@@ -12,6 +12,7 @@ import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { Link } from '@mui/material';
+import toast from 'react-hot-toast';
 
 const initialFormValues = {
   email: '',
@@ -37,19 +38,21 @@ const LoginForm = () => {
     e.preventDefault();
     const { email, password, rememberMe } = formValues;
     if (!email || !password) {
-      alert('All fields are required');
+      toast.error('All fields are required');
       return;
     }
 
     try {
       const response = await customFetch.post('/user/login', formValues);
-      console.log(response);
       dispatch(loginUser({ data: response.data, rememberMe }));
       localStorage.setItem('rememberMe', JSON.stringify(rememberMe));
       navigate(ROUTES.HOME);
     } catch (error) {
-      console.error('Failed to login', error);
-      alert('Login failed. Please try again.');
+      const errorMessage =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (error as any).response?.data?.error ||
+        'Login failed. Please try again.';
+      toast.error(errorMessage);
     }
   };
 
