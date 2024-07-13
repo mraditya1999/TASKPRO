@@ -5,3 +5,4 @@ export { default as Sidebar } from './shared/Sidebar';
 export { default as LoginForm } from './forms/LoginForm';
 export { default as RegisterForm } from './forms/RegisterForm';
 export { default as ProtectedRoute } from './ProtectedRoute';
+export { default as Toast } from './ui/Toast';

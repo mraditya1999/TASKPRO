@@ -1,40 +1,49 @@
+import { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { customFetch } from '../../utils/customFetch';
+import { ROUTES } from '../../utils';
+// components
 import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import { NavLink, useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import { Link } from '@mui/material';
-import { customFetch } from '../../utils/customFetch';
+
+const initialValues = {
+  name: '',
+  email: '',
+  password: '',
+};
 
 const RegisterForm = () => {
   const navigate = useNavigate();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
+  const [formValues, setFormValues] = useState(initialValues);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormValues({ ...formValues, [e.target.name]: e.target.value });
+  };
 
-    const name = data.get('name');
-    const email = data.get('email');
-    const password = data.get('password');
-
-    if (!name || !email || !password)
-      return console.log('All field are required');
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { name, email, password } = formValues;
+    if (!name || !email || !password) {
+      console.log('All field are required');
+      return;
+    }
 
     try {
-      await customFetch.post('/user/register', {
-        name,
-        email,
-        password,
-      });
-      navigate('/login');
+      await customFetch.post('/user/register', formValues);
+      navigate(ROUTES.LOGIN);
     } catch (error) {
-      console.log(error);
+      console.error('Registration failed:', error);
+      alert('Registration failed. Please try again.');
     }
   };
 
   return (
     <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
       <Grid container spacing={2}>
+        {/* Name */}
         <Grid item xs={12}>
           <TextField
             required
@@ -43,9 +52,12 @@ const RegisterForm = () => {
             label='Name'
             name='name'
             autoComplete='name'
+            onChange={handleChange}
+            value={formValues.name}
           />
         </Grid>
 
+        {/* Email */}
         <Grid item xs={12}>
           <TextField
             required
@@ -54,8 +66,12 @@ const RegisterForm = () => {
             label='Email Address'
             name='email'
             autoComplete='email'
+            onChange={handleChange}
+            value={formValues.email}
           />
         </Grid>
+
+        {/* Password */}
         <Grid item xs={12}>
           <TextField
             required
@@ -65,15 +81,21 @@ const RegisterForm = () => {
             type='password'
             id='password'
             autoComplete='new-password'
+            onChange={handleChange}
+            value={formValues.password}
           />
         </Grid>
       </Grid>
+
+      {/* Submit Button */}
       <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
         Register
       </Button>
+
+      {/* Links */}
       <Grid container justifyContent='flex-end'>
         <Grid item>
-          <Link component={NavLink} to='/login' variant='body1'>
+          <Link component={NavLink} to={ROUTES.LOGIN} variant='body1'>
             Already have an account? Login
           </Link>
         </Grid>
@@ -81,4 +103,5 @@ const RegisterForm = () => {
     </Box>
   );
 };
+
 export default RegisterForm;

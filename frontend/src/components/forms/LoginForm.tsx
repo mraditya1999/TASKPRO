@@ -1,46 +1,61 @@
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../hooks';
+import { loginUser } from '../../features';
+import { customFetch } from '../../utils/customFetch';
+import { ROUTES } from '../../utils';
+// components
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { NavLink, useNavigate } from 'react-router-dom';
 import { Link } from '@mui/material';
-import { customFetch } from '../../utils/customFetch';
-import { useAppDispatch } from '../../app/hooks';
-import { loginUser } from '../../app/features/user/userSlice';
+
+const initialFormValues = {
+  email: '',
+  password: '',
+  rememberMe: false,
+};
 
 const LoginForm = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const email = data.get('email');
-    const password = data.get('password');
-    const rememberMe = data.get('rememberMe') === 'remember';
+  const [formValues, setFormValues] = useState(initialFormValues);
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, type, checked } = e.target;
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { email, password, rememberMe } = formValues;
     if (!email || !password) {
-      console.log('All fields are required');
+      alert('All fields are required');
+      return;
     }
 
     try {
-      const response = await customFetch.post('/user/login', {
-        email,
-        password,
-      });
-      dispatch(loginUser(response.data));
+      const response = await customFetch.post('/user/login', formValues);
+      console.log(response);
+      dispatch(loginUser({ data: response.data, rememberMe }));
       localStorage.setItem('rememberMe', JSON.stringify(rememberMe));
-      navigate('/');
-      0;
+      navigate(ROUTES.HOME);
     } catch (error) {
-      console.log(error);
+      console.error('Failed to login', error);
+      alert('Login failed. Please try again.');
     }
   };
 
   return (
     <Box component='form' onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+      {/* Email */}
       <TextField
         margin='normal'
         required
@@ -48,10 +63,13 @@ const LoginForm = () => {
         id='email'
         label='Email Address'
         name='email'
-        // autoComplete='email'
+        autoComplete='email'
         autoFocus
-        value='aditya@gmail.com'
+        value={formValues.email}
+        onChange={handleChange}
       />
+
+      {/* Password */}
       <TextField
         margin='normal'
         required
@@ -60,26 +78,39 @@ const LoginForm = () => {
         label='Password'
         type='password'
         id='password'
-        value='12345'
-        // autoComplete='current-password'
+        autoComplete='current-password'
+        value={formValues.password}
+        onChange={handleChange}
       />
+
+      {/* Remember Me */}
       <FormControlLabel
         control={
-          <Checkbox value='remember' color='primary' name='rememberMe' />
+          <Checkbox
+            value='remember'
+            color='primary'
+            name='rememberMe'
+            checked={formValues.rememberMe}
+            onChange={handleChange}
+          />
         }
         label='Remember me'
       />
+
+      {/* Login */}
       <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
         Login
       </Button>
+
+      {/* Links */}
       <Grid container>
         <Grid item xs>
-          <Link component={NavLink} to='/forget-password' variant='body1'>
+          <Link component={NavLink} to={ROUTES.FORGET_PASSWORD} variant='body1'>
             Forgot password?
           </Link>
         </Grid>
         <Grid item>
-          <Link component={NavLink} to='/register'>
+          <Link component={NavLink} to={ROUTES.REGISTER}>
             {"Don't have an account? Register"}
           </Link>
         </Grid>
@@ -87,4 +118,5 @@ const LoginForm = () => {
     </Box>
   );
 };
+
 export default LoginForm;

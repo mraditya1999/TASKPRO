@@ -10,19 +10,20 @@ import {
   ErrorPage,
   ForgetPasswordPage,
 } from './pages';
+import { ROUTES } from './utils';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path='/' element={<LayoutPage />}>
+      <Route path={ROUTES.HOME} element={<LayoutPage />}>
         <Route index element={<h1>Home Page</h1>} />
-        <Route path='about' element={<h1>About Page</h1>} />
-        <Route path='contact' element={<h1>Contact Page</h1>} />
+        <Route path={ROUTES.ABOUT} element={<h1>About Page</h1>} />
+        <Route path={ROUTES.CONTACT} element={<h1>Contact Page</h1>} />
       </Route>
-      <Route path='/login' element={<LoginPage />} />
-      <Route path='/register' element={<RegisterPage />} />
-      <Route path='/forget-password' element={<ForgetPasswordPage />} />
-      <Route path='*' element={<ErrorPage />} />
+      <Route path={ROUTES.LOGIN} element={<LoginPage />} />
+      <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+      <Route path={ROUTES.FORGET_PASSWORD} element={<ForgetPasswordPage />} />
+      <Route path={ROUTES.ERROR} element={<ErrorPage />} />
     </>
   )
 );

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { logoutUser } from '../../app/features/user/userSlice';
-import { useAppDispatch } from '../../app/hooks';
+import { logoutUser } from '../../features';
+import { useAppDispatch } from '../../hooks';
+import { ROUTES } from '../../utils';
 
 const Header = () => {
   const navigate = useNavigate();
@@ -8,7 +9,7 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(logoutUser());
-    navigate('/login');
+    navigate(ROUTES.LOGIN);
   };
 
   return (
