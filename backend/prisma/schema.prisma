@@ -14,11 +14,25 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
+  id       Int           @id @default(autoincrement())
   name     String
-  email    String  @unique
+  email    String        @unique
   password String
-  role     String  @default("employee")   
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role     String        @default("employee")
+  tasks    TaskDetails[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model TaskDetails {
+  id         Int      @id @default(autoincrement())
+  task       String
+  status     String   @default("not yet started")
+  timeSpend  Int      @default(0)
+  dueDate    DateTime @default(now())
+  priority   String   @default("medium")
+  remarks    String?
+  accepted   Boolean  @default(false)
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
 }
