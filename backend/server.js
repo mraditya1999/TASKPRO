@@ -11,5 +11,5 @@ const userRouter = require('./routers/user');
 app.use('/user', userRouter);
 
 app.listen(port, () => {
-  console.log(`Server is listening on port http://localhost:${port}`);
+  console.log(`Server is listening @ port ${port}`);
 });
