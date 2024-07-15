@@ -72,5 +72,5 @@ app.use('/user', userRouter);
 >>>>>>> 5cf032bf8f8a10275d507d2b62702360183d29c0
 
 app.listen(port, () => {
-  console.log(`Server is listening on port http://localhost:${port}`);
+  console.log(`Server is listening @ port ${port}`);
 });
