@@ -150,6 +150,8 @@ const LayoutPage = () => {
                       justifyContent: open ? 'initial' : 'center',
                       px: 2.5,
                     }}
+                    component={NavLink}
+                    to={href}
                   >
                     <ListItemIcon
                       sx={{
@@ -160,12 +162,10 @@ const LayoutPage = () => {
                     >
                       {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
                     </ListItemIcon>
-                    <NavLink to={href}>
-                      <ListItemText
-                        primary={text}
-                        sx={{ opacity: open ? 1 : 0 }}
-                      />
-                    </NavLink>
+                    <ListItemText
+                      primary={text}
+                      sx={{ opacity: open ? 1 : 0 }}
+                    />
                   </ListItemButton>
                 </ListItem>
               ))}
