@@ -1,5 +1,25 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+
+  .flex-between {
+    @apply flex items-center justify-between;
+  }
+
+  .flex-column-center {
+    @apply flex flex-col items-center justify-center;
+  }
+
+  .block-img {
+    @apply block w-full object-cover;
+  }
+
+  .grid-column-2 {
+    @apply grid grid-cols-2;
+  }
 }
