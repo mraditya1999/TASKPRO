@@ -14,8 +14,7 @@ app.use((req, res, next) => {
   if (skipUrls.findIndex((item) => item == req.url) != -1) {
     next();
   } else {
-    const token = req.headers.token;
-    // console.log(token)
+    const token = req.headers.authorization.split(' ')[1];
     if (!token) {
       res.send(utils.createError('Missing token'));
     } else {

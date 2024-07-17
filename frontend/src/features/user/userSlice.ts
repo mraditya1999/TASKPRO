@@ -1,28 +1,28 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { getUserFromLocalStorage, IUserResponse } from '../../utils';
 import toast from 'react-hot-toast';
+import { IUser, IUserState } from '../../utils/types';
+import { getUserFromStorage } from '../../utils/helpers';
 
-const initialState: IUserResponse = getUserFromLocalStorage() || { data: null };
+
+const initialState: IUserState = {
+  user: getUserFromStorage(),
+};
+
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    loginUser: (
-      state,
-      action: PayloadAction<IUserResponse & { rememberMe: boolean }>
-    ) => {
-      const { data, rememberMe } = action.payload;
-      state.data = data;
-      const storage = rememberMe ? localStorage : sessionStorage;
-      storage.setItem('user', JSON.stringify(data));
+    loginUser: (state, action: PayloadAction<IUser & { rememberMe: boolean }>) => {
+      state.user = action.payload;
+      const storage = action.payload.rememberMe ? localStorage : sessionStorage;
+      storage.setItem('user', JSON.stringify(action.payload));
       toast.success('Logged In Successfully');
     },
     logoutUser: (state) => {
-      state.data = null;
+      state.user = null;
       localStorage.removeItem('user');
       sessionStorage.removeItem('user');
-      localStorage.removeItem('rememberMe');
       toast.success('Logged Out Successfully');
     },
   },

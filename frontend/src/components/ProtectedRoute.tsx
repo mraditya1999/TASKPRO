@@ -11,19 +11,24 @@ interface ProtectedRouteProps {
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { data: user } = useAppSelector((state) => state.user);
+  const user = useAppSelector((state) => state.user.user); // Simplified access
 
   useEffect(() => {
     const storedUser =
       localStorage.getItem('user') || sessionStorage.getItem('user');
+
+    // If user is not present, check the stored user
     if (!user && storedUser) {
+      const parsedUser = JSON.parse(storedUser);
       dispatch(
         loginUser({
-          data: JSON.parse(storedUser),
+          ...parsedUser,
           rememberMe: !!localStorage.getItem('user'),
         })
       );
-    } else if (!user) {
+    }
+
+    if (!user) {
       navigate(ROUTES.LOGIN);
     }
   }, [user, navigate, dispatch]);

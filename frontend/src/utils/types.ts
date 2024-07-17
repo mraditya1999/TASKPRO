@@ -6,19 +6,20 @@ export interface IUser {
   token?: string;
 }
 
-export interface IUserResponse {
-  data: IUser | null;
+export interface IUserState {
+  user: IUser | null;
   status?: string;
   rememberMe?: boolean;
 }
 
 export interface IRow {
+  id: string;
   task: string;
   status: 'Not Yet Started' | 'In Progress' | 'Completed';
-  timeSpent: number;
+  timeSpend: number;
   dueDate: Date | null;
   priority: 'High' | 'Medium' | 'Low';
   remarks: string;
-  accepted: 'Yes' | 'No';
-  isEditing: boolean;
+  accepted: boolean
+  isEditing?: boolean;
 }
