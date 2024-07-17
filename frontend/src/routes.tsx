@@ -15,11 +15,19 @@ import {
   HomePage,
 } from './pages';
 import { ROUTES } from './utils';
+import { ProtectedRoute } from './components';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path={ROUTES.HOME} element={<LayoutPage />}>
+      <Route
+        path={ROUTES.HOME}
+        element={
+          <ProtectedRoute>
+            <LayoutPage />
+          </ProtectedRoute>
+        }
+      >
         <Route index element={<HomePage />} />
         <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
         <Route path={ROUTES.ABOUT} element={<AboutPage />} />

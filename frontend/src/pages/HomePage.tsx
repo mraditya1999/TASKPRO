@@ -1,9 +1,9 @@
-import { TasksTable } from '../components';
+import TaskTable from '../components/TaskTable';
 
 const HomePage = () => {
   return (
     <>
-      <TasksTable />
+      <TaskTable />
     </>
   );
 };

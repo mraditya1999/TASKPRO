@@ -21,6 +21,7 @@ const userSlice = createSlice({
     logoutUser: (state) => {
       state.data = null;
       localStorage.removeItem('user');
+      sessionStorage.removeItem('user');
       localStorage.removeItem('rememberMe');
       toast.success('Logged Out Successfully');
     },
