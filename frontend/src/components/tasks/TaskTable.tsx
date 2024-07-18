@@ -1,23 +1,22 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Paper,
+  Table,
+  TableContainer,
   Button,
   Snackbar,
   Alert,
-  IconButton,
-  TableSortLabel,
+  TableCell,
+  TableRow,
+  TableBody,
 } from '@mui/material';
-import { Add, Delete, Edit } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
+import TaskTableHeader from './TaskTableHeader';
+import TaskTableRow from './TaskTableRow';
+import TaskDialog from './TaskDialog';
 import { IRow } from '../../utils/types';
 import { customFetch } from '../../utils';
 import { useAppSelector } from '../../hooks';
-import TaskDialog from './TaskDialog';
 import { fetchTasks } from '../../utils/taskUtils';
 
 const TaskTable: React.FC = () => {
@@ -36,7 +35,7 @@ const TaskTable: React.FC = () => {
 
   useEffect(() => {
     fetchTasks(token, setRows, userId);
-  }, [token]);
+  }, [token, userId]);
 
   const handleEditClick = (index: number) => {
     setEditIndex(index);
@@ -100,80 +99,20 @@ const TaskTable: React.FC = () => {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>
-        <TableHead>
-          <TableRow>
-            <TableCell>Task</TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={sortField === 'status'}
-                direction={sortOrder}
-                onClick={() => handleSort('status')}
-              >
-                Status
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={sortField === 'timeSpend'}
-                direction={sortOrder}
-                onClick={() => handleSort('timeSpend')}
-              >
-                Time Spend (minutes)
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={sortField === 'dueDate'}
-                direction={sortOrder}
-                onClick={() => handleSort('dueDate')}
-              >
-                Due Date
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={sortField === 'priority'}
-                direction={sortOrder}
-                onClick={() => handleSort('priority')}
-              >
-                Priority
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>Remarks</TableCell>
-            <TableCell>
-              <TableSortLabel
-                active={sortField === 'accepted'}
-                direction={sortOrder}
-                onClick={() => handleSort('accepted')}
-              >
-                Accepted
-              </TableSortLabel>
-            </TableCell>
-            <TableCell>Action</TableCell>
-          </TableRow>
-        </TableHead>
+        <TaskTableHeader
+          sortField={sortField}
+          sortOrder={sortOrder}
+          handleSort={handleSort}
+        />
         <TableBody>
           {sortedRows.length > 0 ? (
             sortedRows.map((row, index) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.task}</TableCell>
-                <TableCell>{row.status}</TableCell>
-                <TableCell>{row.timeSpend}</TableCell>
-                <TableCell>
-                  {row.dueDate ? new Date(row.dueDate).toDateString() : 'N/A'}
-                </TableCell>
-                <TableCell>{row.priority}</TableCell>
-                <TableCell>{row.remarks}</TableCell>
-                <TableCell>{row.accepted ? 'Yes' : 'No'}</TableCell>
-                <TableCell>
-                  <IconButton onClick={() => handleEditClick(index)}>
-                    <Edit />
-                  </IconButton>
-                  <IconButton onClick={() => handleDeleteClick(row.id)}>
-                    <Delete />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
+              <TaskTableRow
+                key={row.id}
+                row={row}
+                handleEditClick={() => handleEditClick(index)}
+                handleDeleteClick={() => handleDeleteClick(row.id)}
+              />
             ))
           ) : (
             <TableRow>

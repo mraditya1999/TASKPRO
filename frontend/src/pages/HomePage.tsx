@@ -1,10 +1,6 @@
-import TaskTable from '../components/task/TaskTable';
+import { TaskTable } from '../components';
 
 const HomePage = () => {
-  return (
-    <>
-      <TaskTable />
-    </>
-  );
+  return <TaskTable />;
 };
 export default HomePage;
