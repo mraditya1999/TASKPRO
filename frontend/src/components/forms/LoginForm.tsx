@@ -44,8 +44,12 @@ const LoginForm = () => {
 
     try {
       const response = await customFetch.post('/user/login', formValues);
-      dispatch(loginUser({ data: response.data, rememberMe }));
-      localStorage.setItem('rememberMe', JSON.stringify(rememberMe));
+      dispatch(loginUser({ ...response.data.data, rememberMe }));
+      if (rememberMe) {
+        localStorage.setItem('rememberMe', JSON.stringify(rememberMe));
+      } else {
+        localStorage.removeItem('rememberMe');
+      }
       navigate(ROUTES.HOME);
     } catch (error) {
       const errorMessage =

@@ -1,10 +1,15 @@
-import { IUser, IUserState } from './types';
+import { IUser } from './types';
 
 export const getUserFromStorage = (): IUser | null => {
-  const user = localStorage.getItem('user') || sessionStorage.getItem('user');
-  return user ? JSON.parse(user) : null;
-};
+  const userFromLocalStorage = localStorage.getItem('user');
+  if (userFromLocalStorage) {
+    return JSON.parse(userFromLocalStorage) as IUser;
+  }
 
-export const initialState: IUserState = {
-  user: null,
+  const userFromSessionStorage = sessionStorage.getItem('user');
+  if (userFromSessionStorage) {
+    return JSON.parse(userFromSessionStorage) as IUser;
+  }
+
+  return null;
 };

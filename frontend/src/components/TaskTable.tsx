@@ -57,8 +57,8 @@ const TaskTable: React.FC = () => {
   const [snackMessage, setSnackMessage] = useState('');
 
   const user = useAppSelector((state) => state.user.user);
-  const token = user.data.data.token;
-  const userId = user.data.data.id;
+  const token = user?.token;
+  const userId = user?.id;
 
   const fetchTasks = async () => {
     try {
