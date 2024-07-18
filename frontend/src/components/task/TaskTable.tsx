@@ -11,6 +11,7 @@ import {
   Snackbar,
   Alert,
   IconButton,
+  TableSortLabel,
 } from '@mui/material';
 import { Add, Delete, Edit } from '@mui/icons-material';
 import { IRow } from '../../utils/types';
@@ -25,6 +26,8 @@ const TaskTable: React.FC = () => {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false);
   const [snackOpen, setSnackOpen] = useState(false);
   const [snackMessage, setSnackMessage] = useState('');
+  const [sortField, setSortField] = useState<keyof IRow>('task');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const user = useAppSelector((state) => state.user.user);
   const token = user?.token;
@@ -41,7 +44,7 @@ const TaskTable: React.FC = () => {
 
   const handleDeleteClick = async (id: string) => {
     try {
-      const response = await customFetch(`/task-details/user/${id}`, {
+      const response = await customFetch(`/task-details/task/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -50,7 +53,7 @@ const TaskTable: React.FC = () => {
         setSnackMessage('Task deleted successfully!');
         setSnackOpen(true);
         fetchTasks(token, setRows, userId);
-      } else {  
+      } else {
         console.error('Failed to delete task:', response);
       }
     } catch (error) {
@@ -62,24 +65,96 @@ const TaskTable: React.FC = () => {
     setSnackOpen(false);
   };
 
+  const handleSort = (field: keyof IRow) => {
+    const isAsc = sortField === field && sortOrder === 'asc';
+    setSortOrder(isAsc ? 'desc' : 'asc');
+    setSortField(field);
+  };
+
+  const priorityOrder = { Low: 1, Medium: 2, High: 3 };
+  const statusOrder = { 'Not Yet Started': 1, 'In Progress': 2, Completed: 3 };
+
+  const sortedRows = [...rows].sort((a, b) => {
+    if (sortField === 'dueDate') {
+      const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 0;
+      const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 0;
+      return sortOrder === 'asc' ? dateA - dateB : dateB - dateA;
+    } else if (sortField === 'priority') {
+      return sortOrder === 'asc'
+        ? priorityOrder[a.priority] - priorityOrder[b.priority]
+        : priorityOrder[b.priority] - priorityOrder[a.priority];
+    } else if (sortField === 'status') {
+      return sortOrder === 'asc'
+        ? statusOrder[a.status] - statusOrder[b.status]
+        : statusOrder[b.status] - statusOrder[a.status];
+    } else if (sortField !== 'task' && sortField !== 'remarks') {
+      const fieldA = a[sortField];
+      const fieldB = b[sortField];
+      if (fieldA < fieldB) return sortOrder === 'asc' ? -1 : 1;
+      if (fieldA > fieldB) return sortOrder === 'asc' ? 1 : -1;
+      return 0;
+    }
+    return 0;
+  });
+
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label='simple table'>
         <TableHead>
           <TableRow>
             <TableCell>Task</TableCell>
-            <TableCell>Status</TableCell>
-            <TableCell>Time Spend (minutes)</TableCell>
-            <TableCell>Due Date</TableCell>
-            <TableCell>Priority</TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortField === 'status'}
+                direction={sortOrder}
+                onClick={() => handleSort('status')}
+              >
+                Status
+              </TableSortLabel>
+            </TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortField === 'timeSpend'}
+                direction={sortOrder}
+                onClick={() => handleSort('timeSpend')}
+              >
+                Time Spend (minutes)
+              </TableSortLabel>
+            </TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortField === 'dueDate'}
+                direction={sortOrder}
+                onClick={() => handleSort('dueDate')}
+              >
+                Due Date
+              </TableSortLabel>
+            </TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortField === 'priority'}
+                direction={sortOrder}
+                onClick={() => handleSort('priority')}
+              >
+                Priority
+              </TableSortLabel>
+            </TableCell>
             <TableCell>Remarks</TableCell>
-            <TableCell>Accepted</TableCell>
+            <TableCell>
+              <TableSortLabel
+                active={sortField === 'accepted'}
+                direction={sortOrder}
+                onClick={() => handleSort('accepted')}
+              >
+                Accepted
+              </TableSortLabel>
+            </TableCell>
             <TableCell>Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.length > 0 ? (
-            rows.map((row, index) => (
+          {sortedRows.length > 0 ? (
+            sortedRows.map((row, index) => (
               <TableRow key={row.id}>
                 <TableCell>{row.task}</TableCell>
                 <TableCell>{row.status}</TableCell>

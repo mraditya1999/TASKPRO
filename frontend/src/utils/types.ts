@@ -15,7 +15,7 @@ export interface IUserState {
 export interface IRow {
   id: string;
   task: string;
-  status: 'Pending' | 'In Progress' | 'Completed';
+  status: 'Not Yet Started' | 'In Progress' | 'Completed';
   timeSpend: number;
   dueDate: string | null;
   priority: 'High' | 'Medium' | 'Low';

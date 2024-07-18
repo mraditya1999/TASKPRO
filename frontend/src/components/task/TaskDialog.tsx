@@ -68,7 +68,7 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
       // Reset form data if creating a new task
       setTaskData({
         task: '',
-        status: 'Pending',
+        status: 'Not Yet Started',
         timeSpend: 0,
         dueDate: null,
         priority: 'Medium',
@@ -172,7 +172,7 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
           value={taskData.status}
           onChange={(e) => handleInputChange('status', e.target.value)}
         >
-          <MenuItem value='Pending'>Pending</MenuItem>
+          <MenuItem value='Not Yet Started'>Not Yet Started</MenuItem>
           <MenuItem value='In Progress'>In Progress</MenuItem>
           <MenuItem value='Completed'>Completed</MenuItem>
         </Select>
