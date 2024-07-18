@@ -4,6 +4,8 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Typography from '@mui/material/Typography';
+import { useAppSelector } from '../../hooks';
+import { Box } from '@mui/material';
 
 const drawerWidth = 240;
 
@@ -29,23 +31,39 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const CustomAppBar = ({ open, handleDrawerOpen }: CustomAppBarProps) => (
-  <AppBar position='fixed' open={open}>
-    <Toolbar>
-      <IconButton
-        color='inherit'
-        aria-label='open drawer'
-        onClick={handleDrawerOpen}
-        edge='start'
-        sx={{ mr: 2, ...(open && { display: 'none' }) }}
-      >
-        <MenuIcon />
-      </IconButton>
-      <Typography variant='h6' noWrap component='div'>
-        Task Pro
-      </Typography>
-    </Toolbar>
-  </AppBar>
-);
+const CustomAppBar = ({ open, handleDrawerOpen }: CustomAppBarProps) => {
+  const userName = useAppSelector((state) => state.user.user?.name);
+
+  return (
+    <AppBar position='fixed' open={open}>
+      <Toolbar>
+        <IconButton
+          color='inherit'
+          aria-label='open drawer'
+          onClick={handleDrawerOpen}
+          edge='start'
+          sx={{ mr: 2, ...(open && { display: 'none' }) }}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <Typography variant='h5' sx={{}}>
+            TaskPro
+          </Typography>
+          <Typography variant='h6' noWrap component='div'>
+            Welcome back, {userName}
+          </Typography>
+        </Box>
+      </Toolbar>
+    </AppBar>
+  );
+};
 
 export default CustomAppBar;

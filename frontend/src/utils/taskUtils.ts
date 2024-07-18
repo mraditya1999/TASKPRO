@@ -5,7 +5,7 @@ export const createData = (task: string): IRow => {
   return {
     id: '',
     task,
-    status: 'Pending',
+    status: 'Not Yet Started',
     timeSpend: 0,
     dueDate: '',
     priority: 'Low',
