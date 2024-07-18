@@ -43,7 +43,10 @@ const LoginForm = () => {
     }
 
     try {
-      const response = await customFetch.post('/user/login', formValues);
+      const response = await customFetch.post('/user/login', {
+        email,
+        password,
+      });
       dispatch(loginUser({ ...response.data.data, rememberMe }));
       if (rememberMe) {
         localStorage.setItem('rememberMe', JSON.stringify(rememberMe));

@@ -17,12 +17,13 @@ export const createData = (task: string): IRow => {
 
 export const fetchTasks = async (
   token: string | undefined,
-  setRows: React.Dispatch<React.SetStateAction<IRow[]>>
+  setRows: React.Dispatch<React.SetStateAction<IRow[]>>,
+  userId: string | undefined
 ) => {
   if (!token) return;
 
   try {
-    const response = await customFetch('/task-details', {
+    const response = await customFetch(`/task-details/user/${userId}`, {
       method: 'GET',
       headers: { Authorization: `Bearer ${token}` },
     });

@@ -142,7 +142,7 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
         if (response.status === 201) {
           setSnackMessage('Task created successfully!');
           setSnackOpen(true);
-          fetchTasks(token, setRows); // Re-fetch tasks to get updated data
+          fetchTasks(token, setRows, userId); // Re-fetch tasks to get updated data
           onClose();
         } else {
           console.error('Failed to create task:', response);

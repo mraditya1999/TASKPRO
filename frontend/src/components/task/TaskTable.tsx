@@ -32,7 +32,7 @@ const TaskTable: React.FC = () => {
   const userRole = user?.role;
 
   useEffect(() => {
-    fetchTasks(token, setRows);
+    fetchTasks(token, setRows, userId);
   }, [token]);
 
   const handleEditClick = (index: number) => {
@@ -41,7 +41,7 @@ const TaskTable: React.FC = () => {
 
   const handleDeleteClick = async (id: string) => {
     try {
-      const response = await customFetch(`/task-details/task/${id}`, {
+      const response = await customFetch(`/task-details/user/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -49,8 +49,8 @@ const TaskTable: React.FC = () => {
       if (response.data) {
         setSnackMessage('Task deleted successfully!');
         setSnackOpen(true);
-        fetchTasks(token, setRows);
-      } else {
+        fetchTasks(token, setRows, userId);
+      } else {  
         console.error('Failed to delete task:', response);
       }
     } catch (error) {
