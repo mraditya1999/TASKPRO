@@ -1,4 +1,4 @@
-import TaskTable from '../components/TaskTable';
+import TaskTable from '../components/task/TaskTable';
 
 const HomePage = () => {
   return (

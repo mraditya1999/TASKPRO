@@ -15,11 +15,11 @@ export interface IUserState {
 export interface IRow {
   id: string;
   task: string;
-  status: 'Not Yet Started' | 'In Progress' | 'Completed';
+  status: 'Pending' | 'In Progress' | 'Completed';
   timeSpend: number;
-  dueDate: Date | null;
+  dueDate: string | null;
   priority: 'High' | 'Medium' | 'Low';
   remarks: string;
-  accepted: boolean
-  isEditing?: boolean;
+  accepted: boolean;
+  isEditing: boolean;
 }

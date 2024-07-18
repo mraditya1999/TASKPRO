@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import toast from 'react-hot-toast';
 import { IUser, IUserState } from '../../utils/types';
-import { getUserFromStorage } from '../../utils/helpers';
+import { getUserFromStorage } from '../../utils/storage';
 
 const initialState: IUserState = {
   user: getUserFromStorage(),
