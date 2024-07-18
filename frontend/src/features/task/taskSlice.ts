@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IRow } from '../../utils/types';
-import { customFetch } from '../../utils';
+// import { customFetch } from '../../utils';
 
 interface TaskState {
   tasks: IRow[];
@@ -15,7 +15,7 @@ const initialState: TaskState = {
 };
 
 const taskSlice = createSlice({
-  name: 'tasks',
+  name: 'task',
   initialState,
   reducers: {
     setTasks(state, action: PayloadAction<IRow[]>) {
@@ -33,15 +33,18 @@ const taskSlice = createSlice({
     addTask(state, action: PayloadAction<IRow>) {
       state.tasks.push(action.payload);
     },
-    updateTask(state, action: PayloadAction<{ id: string; updatedTask: IRow }>) {
+    updateTask(
+      state,
+      action: PayloadAction<{ id: string; updatedTask: IRow }>
+    ) {
       const { id, updatedTask } = action.payload;
-      const index = state.tasks.findIndex(task => task.id === id);
+      const index = state.tasks.findIndex((task) => task.id === id);
       if (index !== -1) {
         state.tasks[index] = updatedTask;
       }
     },
     deleteTask(state, action: PayloadAction<string>) {
-      state.tasks = state.tasks.filter(task => task.id !== action.payload);
+      state.tasks = state.tasks.filter((task) => task.id !== action.payload);
     },
   },
 });
@@ -54,23 +57,23 @@ export const {
   updateTask,
   deleteTask,
 } = taskSlice.actions;
-
 export default taskSlice.reducer;
+export type { TaskState };
 
-export const fetchTasks =
-  (token: string | undefined): AppThunk =>
-  async (dispatch) => {
-    dispatch(setLoading(true));
-    try {
-      const response = await customFetch('/task-details', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const data = await response.data.data;
-      dispatch(setTasks(data));
-    } catch (error) {
-      if (error instanceof Error) dispatch(setError(error.message));
-      else dispatch(setError('Something went wrong. Please try again later'));
-    }
-  };
+// export const fetchTasks =
+//   (token: string | undefined): AppThunk =>
+//   async (dispatch) => {
+//     dispatch(setLoading(true));
+//     try {
+//       const response = await customFetch('/task-details', {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//         },
+//       });
+//       const data = await response.data.data;
+//       dispatch(setTasks(data));
+//     } catch (error) {
+//       if (error instanceof Error) dispatch(setError(error.message));
+//       else dispatch(setError('Something went wrong. Please try again later'));
+//     }
+//   };

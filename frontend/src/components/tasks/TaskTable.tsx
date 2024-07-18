@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Paper,
   Table,
@@ -9,8 +9,13 @@ import {
   TableCell,
   TableRow,
   TableBody,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography,
 } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Add, Delete } from '@mui/icons-material';
 import TaskTableHeader from './TaskTableHeader';
 import TaskTableRow from './TaskTableRow';
 import TaskDialog from './TaskDialog';
@@ -27,6 +32,8 @@ const TaskTable: React.FC = () => {
   const [snackMessage, setSnackMessage] = useState('');
   const [sortField, setSortField] = useState<keyof IRow>('task');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState<boolean>(false);
+  const [deleteTaskId, setDeleteTaskId] = useState<string>('');
 
   const user = useAppSelector((state) => state.user.user);
   const token = user?.token;
@@ -41,9 +48,14 @@ const TaskTable: React.FC = () => {
     setEditIndex(index);
   };
 
-  const handleDeleteClick = async (id: string) => {
+  const handleDeleteClick = (id: string) => {
+    setDeleteTaskId(id);
+    setIsDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
     try {
-      const response = await customFetch(`/task-details/task/${id}`, {
+      const response = await customFetch(`/task-details/task/${deleteTaskId}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -58,6 +70,12 @@ const TaskTable: React.FC = () => {
     } catch (error) {
       console.log(error);
     }
+
+    setIsDeleteDialogOpen(false);
+  };
+
+  const handleDeleteCancel = () => {
+    setIsDeleteDialogOpen(false);
   };
 
   const handleSnackClose = () => {
@@ -162,6 +180,31 @@ const TaskTable: React.FC = () => {
         setSnackOpen={setSnackOpen}
         user={user}
       />
+
+      <Dialog open={isDeleteDialogOpen} onClose={handleDeleteCancel}>
+        <DialogTitle>Delete Task</DialogTitle>
+        <DialogContent>
+          <Typography>Are you sure you want to delete this task?</Typography>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={handleDeleteCancel}
+            color='primary'
+            variant='outlined'
+            startIcon={<Delete />}
+          >
+            No, Cancel
+          </Button>
+          <Button
+            onClick={handleDeleteConfirm}
+            color='error'
+            variant='contained'
+            autoFocus
+          >
+            Yes, Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       <Snackbar
         open={snackOpen}

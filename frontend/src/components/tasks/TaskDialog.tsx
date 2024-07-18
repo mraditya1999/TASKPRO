@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -14,7 +14,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 import { IRow, IUser } from '../../utils/types';
 import { customFetch } from '../../utils/customFetch';
 import { createData, fetchTasks } from '../../utils/taskUtils';
-import { useEffect, useState } from 'react';
 
 interface TaskDialogProps {
   open: boolean;
@@ -40,7 +39,6 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
   setEditIndex,
   token,
   userId,
-  userRole,
   setSnackMessage,
   setSnackOpen,
   user,
@@ -95,8 +93,27 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
   };
 
   const handleSaveClick = async () => {
+    if (!taskData.task.trim()) {
+      setSnackMessage('Task name is required.');
+      setSnackOpen(true);
+      return;
+    }
+
+    if (taskData.timeSpend <= 0) {
+      setSnackMessage('Time spent must be greater than zero.');
+      setSnackOpen(true);
+      return;
+    }
+
+    if (!taskData.dueDate) {
+      setSnackMessage('Due date is required.');
+      setSnackOpen(true);
+      return;
+    }
+
     if (editIndex !== null) {
       const { id, isEditing, ...updatedRow } = taskData;
+      console.log(isEditing);
 
       try {
         const response = await customFetch(`/task-details/task/${id}`, {
@@ -220,12 +237,13 @@ const TaskDialog: React.FC<TaskDialogProps> = ({
           margin='dense'
           fullWidth
           value={taskData.accepted ? 'Yes' : 'No'}
-          onChange={(e) => {
-            if (userRole === 'admin') {
-              handleInputChange('accepted', e.target.value === 'Yes');
-            }
+          onChange={() => {
+            // if (userRole === 'admin') {
+            //   handleInputChange('accepted', e.target.value === 'Yes');
+            // }
           }}
-          disabled={userRole !== 'admin'} // Disable if not admin
+          // disabled={userRole !== 'admin'} // Disable if not admin
+          disabled
         >
           <MenuItem value='Yes'>Yes</MenuItem>
           <MenuItem value='No'>No</MenuItem>
